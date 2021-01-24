@@ -21,6 +21,14 @@ asm(".text\n\t"
 	"movq %r13, %rax \n\t"
     "ret \n\t"
 	);
+#elif defined(__arm__)
+int __attribute__((noinline, visibility("internal")))
+Addfunc(int a, int b);
+asm(
+	"Addfunc:\n\t"
+	"ADD r0,r0,r1\n\t"
+	"BX  lr\n\t"
+	);
 #endif
 
 int main() {  
