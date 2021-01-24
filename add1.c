@@ -26,7 +26,8 @@ int __attribute__((noinline, visibility("internal")))
 Addfunc(int a, int b);
 asm(".text\n\t"
     ".p2align 5\n\t"
-	"__Addfunc:\n\t"
+	".globl \n\t"
+	"_Addfunc:\n\t"
 	"ADD r0,r0,r1\n\t"
 	"BX  lr\n\t"
 	);
