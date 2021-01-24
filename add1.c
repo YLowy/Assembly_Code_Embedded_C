@@ -21,15 +21,14 @@ asm(".text\n\t"
 	"movq %r13, %rax \n\t"
     "ret \n\t"
 	);
-#elif defined(__arm__)
+#elif defined(__aarch64__)
 int __attribute__((noinline, visibility("internal")))
 Addfunc(int a, int b);
 asm(".text\n\t"
-    ".p2align 5\n\t"
-	".globl \n\t"
-	"_Addfunc:\n\t"
-	"ADD r0,r0,r1\n\t"
-	"BX  lr\n\t"
+	".globl Addfunc \n\t"
+	"Addfunc:\n\t"
+	"ADD x0,x0,x1\n\t"
+	"ret\n\t"	
 	);
 #endif
 
