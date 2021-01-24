@@ -21,7 +21,21 @@ asm(".text\n\t"
 	"movq %r13, %rax \n\t"
     "ret \n\t"
 	);
+
+
+#elif defined(__aarch64__)
+int __attribute__((noinline, visibility("internal")))
+Addfunc(int* a, int* b);
+asm(".text\n\t"
+	".globl Addfunc \n\t"
+	"Addfunc:\n\t"
+	"LDR x0, [x0]\n\t"
+	"LDR x1, [x1]\n\t"
+	"ADD x0, x0, x1\n\t"
+	"ret\n\t"	
+	);
 #endif
+
 
 int main() {  
     int a = 10,b=11,c;
