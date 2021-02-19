@@ -1,5 +1,8 @@
 #include<stdio.h>  
-
+#include<stdlib.h>
+#include<stdint.h>
+#define uintptr_t unsigned long int;
+typedef uintptr_t coro_context[10];
 #if defined(__APPLE__)
 #define ASM_SYMBOL(name_) "_" #name_
 #else
@@ -10,15 +13,13 @@
     ".globl " ASM_SYMBOL(name_) "\n\t" ASM_SYMBOL(name_) ":\n\t"
 
 #if defined(__x86_64__)
-char* __attribute__((noinline, visibility("internal")))
-leaqfunc(char* str);
+long* __attribute__((noinline, visibility("internal")))
+leaqfunc(void *str1, void *str2);
 asm(".text\n\t"
     ".p2align 5\n\t"
     ASM_MY_FUNCTION(leaqfunc)
-	//"movq %rdi, %r12 \n\t"
-    "leaq 0x8(%rdi), %r13 \n\t"
-	//"addq $2 , %r13\n\t"
-	"movq %r13, %rax \n\t"
+    //"leaq 0x8(%rdi,%rsi,8), %rax \n\t"
+    "leaq 0x8(%rdi), %rax \n\t"
     "ret \n\t"
 	);
 #elif defined(__aarch64__)
@@ -36,15 +37,18 @@ int main() {
     int a = 10,b=11;
 	char *c;
 	char  str[10] = {'a','b','c','d','e','f','g','h','e','\0'};
-    
-	printf("str  = %s \n",str);
 	
-	printf("&str  = %d \n",*(int*)(void*)&str);
-	printf("&str+1  = %d \n",*(int*)(void*)(&str+8));
+	long * ptr = (long*)malloc(8*sizeof(long));
+
+	for(int i =0;i<8;i++)
+		ptr[i]= i+10;
+	void* count=(void *)0;
+	//printf("&ptr  = %p \n",(void *)ptr);
+	//printf("&count  = %p \n",(void *)&count);
+	printf("num1 = %ld\n",ptr[0]);
+    void* num=(void*)leaqfunc((void*)ptr,count);
 	
-	c=leaqfunc(str);
-	
-	printf("c  = %s \n",c);
-	printf("&c  = %d \n",*(int*)(void*)&c);
+	//printf("num  = %p \n",num);
+	printf("num  = %d \n",*(int*)num);
 	return 0;
 }  
